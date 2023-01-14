@@ -29,4 +29,13 @@ enum SecondRouteFlow: Routable {
             return "secondSecond"
         }
     }
+
+    var color: UIColor {
+        switch self {
+        case .secondFirst:
+            return .red
+        case .secondSecond:
+            return .purple
+        }
+    }
 }

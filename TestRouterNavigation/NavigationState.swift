@@ -8,11 +8,6 @@
 import Foundation
 import SwiftUI
 
-protocol Routable: Hashable {
-    func view() -> AnyView
-    var title: String { get }
-}
-
 enum PresentationType {
     case push
     case present

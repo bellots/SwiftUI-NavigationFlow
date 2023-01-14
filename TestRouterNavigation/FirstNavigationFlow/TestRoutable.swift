@@ -34,4 +34,15 @@ enum TestRoute: Routable {
             return "modalView"
         }
     }
+
+    var color: UIColor {
+        switch self {
+        case .firstView:
+            return .black
+        case .secondView:
+            return .yellow
+        case .modalView:
+            return .systemPink
+        }
+    }
 }

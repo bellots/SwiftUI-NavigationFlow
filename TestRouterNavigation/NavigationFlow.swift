@@ -50,7 +50,7 @@ import SwiftUI
     }
 
     fileprivate func viewController<T: Routable>(from route: T) -> UIViewController {
-        return MyUIHostingController(rootView: route.view().environmentObject(navigationViewModel), title: route.title) {
+        return MyUIHostingController(rootView: route.view().environmentObject(navigationViewModel), title: route.title, color: route.color) {
             if navigationViewModel.hasForcedDismiss {
                 navigationViewModel.hasForcedDismiss = false
                 return

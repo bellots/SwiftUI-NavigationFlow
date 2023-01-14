@@ -11,11 +11,13 @@ import SwiftUI
 class MyUIHostingController<Content>: UIHostingController<Content> where Content: View {
     var isPoppingBack: () -> Void
     var navigationTitle: String
+    var color: UIColor
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.backItem?.title = navigationTitle
         navigationItem.backButtonDisplayMode = .minimal
+        self.navigationController?.navigationBar.tintColor = color
         self.title = navigationTitle
     }
 
@@ -29,9 +31,10 @@ class MyUIHostingController<Content>: UIHostingController<Content> where Content
         }
     }
 
-    init(rootView: Content, title: String, isPoppingBack: @escaping () -> Void) {
+    init(rootView: Content, title: String, color: UIColor, isPoppingBack: @escaping () -> Void) {
         self.isPoppingBack = isPoppingBack
         self.navigationTitle = title
+        self.color = color
         super.init(rootView: rootView)
 
     }
@@ -39,6 +42,7 @@ class MyUIHostingController<Content>: UIHostingController<Content> where Content
     override init(rootView: Content) {
         self.navigationTitle = ""
         isPoppingBack = { }
+        self.color = .blue
         super.init(rootView: rootView)
 
         // subscriptions to notifications will go here

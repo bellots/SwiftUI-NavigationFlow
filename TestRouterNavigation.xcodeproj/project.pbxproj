@@ -22,6 +22,7 @@
 		6AAEA938295E53C600623E2F /* SecondRouteFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAEA937295E53C600623E2F /* SecondRouteFlow.swift */; };
 		6AAEA93A295E540900623E2F /* SecondSecondView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAEA939295E540900623E2F /* SecondSecondView.swift */; };
 		6AC6D9AF295EEDE0004E4398 /* ModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AC6D9AE295EEDE0004E4398 /* ModalView.swift */; };
+		6AE60A9C296E2AB000D8C66A /* Routable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE60A9B296E2AB000D8C66A /* Routable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +42,7 @@
 		6AAEA937295E53C600623E2F /* SecondRouteFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondRouteFlow.swift; sourceTree = "<group>"; };
 		6AAEA939295E540900623E2F /* SecondSecondView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondSecondView.swift; sourceTree = "<group>"; };
 		6AC6D9AE295EEDE0004E4398 /* ModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalView.swift; sourceTree = "<group>"; };
+		6AE60A9B296E2AB000D8C66A /* Routable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Routable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +84,7 @@
 				6A6950FA29340D2F007E5FB6 /* NavigationState.swift */,
 				6A6950FC29340EC6007E5FB6 /* NavigationViewModel.swift */,
 				6A69510229341085007E5FB6 /* MyHostViewController.swift */,
+				6AE60A9B296E2AB000D8C66A /* Routable.swift */,
 				6A69510429341293007E5FB6 /* NavigationFlow.swift */,
 			);
 			path = TestRouterNavigation;
@@ -187,6 +190,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6AAEA933295E536000623E2F /* TestRoutable.swift in Sources */,
+				6AE60A9C296E2AB000D8C66A /* Routable.swift in Sources */,
 				6AAEA936295E538D00623E2F /* SecondFirstView.swift in Sources */,
 				6A69510329341085007E5FB6 /* MyHostViewController.swift in Sources */,
 				6AAEA938295E53C600623E2F /* SecondRouteFlow.swift in Sources */,
