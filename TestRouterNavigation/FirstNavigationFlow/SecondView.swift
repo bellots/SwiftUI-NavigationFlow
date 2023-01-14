@@ -14,7 +14,11 @@ struct SecondView: View {
         VStack {
             Text("Questa è la second view!!")
             Button {
-                firstNavigationViewModel.dismissCurrent(forced: true)
+                
+                let navigationState = NavigationState(route: TestRoute.firstView, presentationType: .push)
+                firstNavigationViewModel.states.append(navigationState)
+//                firstNavigationViewModel
+//                    .dismissCurrent(forced: true)
             } label: {
                 Text("Torna indietro")
             }

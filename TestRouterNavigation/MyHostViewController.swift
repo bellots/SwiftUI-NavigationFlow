@@ -17,10 +17,17 @@ class MyUIHostingController<Content>: UIHostingController<Content> where Content
         super.viewDidLoad()
         self.navigationController?.navigationBar.backItem?.title = navigationTitle
         navigationItem.backButtonDisplayMode = .minimal
+//        self.navigationController?.navigationBar.tintColor = color
+//        self.title = navigationTitle
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
         self.navigationController?.navigationBar.tintColor = color
         self.title = navigationTitle
     }
-
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         if self.isMovingFromParent {
