@@ -8,20 +8,24 @@
 import Foundation
 import SwiftUI
 
-@MainActor struct NavigationFlow<T: Routable>: UIViewControllerRepresentable {
+@MainActor public struct NavigationFlow<T: Routable>: UIViewControllerRepresentable {
 
-    typealias UIViewControllerType = UINavigationController
+    public typealias UIViewControllerType = UINavigationController
 
     @EnvironmentObject var navigationViewModel: NavigationViewModel
 
     var firstRoute: T
 
-    func makeUIViewController(context: Context) -> UINavigationController {
+    public init (firstRoute: T) {
+        self.firstRoute = firstRoute
+    }
+
+    public func makeUIViewController(context: Context) -> UINavigationController {
         let state = firstRoute
         return UINavigationController(rootViewController: viewController(from: state))
     }
 
-    func updateUIViewController(_ uiViewController: UINavigationController, context: Context) {
+    public func updateUIViewController(_ uiViewController: UINavigationController, context: Context) {
         if let oldPresentationType = navigationViewModel.oldPresentationType {
             if !navigationViewModel.hasForcedDismiss {
                 return

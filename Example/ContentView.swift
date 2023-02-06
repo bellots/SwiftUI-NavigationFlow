@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftUINavigationFlow
 
 struct ContentView: View {
     @StateObject var viewModel: NavigationViewModel = NavigationViewModel()

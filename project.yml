@@ -1,0 +1,23 @@
+name: SwiftUI-NavigationFlow
+options:
+  bundleIdPrefix: ""
+configs:
+  Local Debug: debug
+  Local Release: release
+  Production Debug: debug
+  Production Release: release
+settings:
+  configs:
+    Local Debug:
+      SWIFT_ACTIVE_COMPILATION_CONDITIONS: LOCAL DEBUG
+    Local Release:
+      SWIFT_ACTIVE_COMPILATION_CONDITIONS: LOCAL
+    Production Debug:
+      SWIFT_ACTIVE_COMPILATION_CONDITIONS: PRODUCTION DEBUG
+    Production Release:
+      SWIFT_ACTIVE_COMPILATION_CONDITIONS: PRODUCTION
+include:
+  - path: Configuration/Modules/example.yml
+    relativePaths: false
+  - path: Configuration/Modules/SwiftUINavigationFlow.yml
+    relativePaths: false

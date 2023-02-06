@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftUINavigationFlow
 
 struct SecondFirstView: View {
     @EnvironmentObject var secondNavigationViewModel: NavigationViewModel

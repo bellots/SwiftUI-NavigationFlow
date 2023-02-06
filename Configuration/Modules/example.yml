@@ -1,0 +1,31 @@
+targets:
+  Example:
+    type: application
+    platform: iOS
+    deploymentTarget: "14.0"
+    sources: [Example]
+    info:
+      path: "plists/Example.plist"
+      properties:
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UILaunchScreen:
+          UILaunchScreen:
+        CFBundleVersion: "${BUILD_NUMBER}"
+        CFBundleShortVersionString: "${VERSION_NUMBER}"
+        CFBundleDisplayName: "Example"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.bellots.SwiftUINavigationFlowExample
+        CODE_SIGN_STYLE: Automatic
+      configs:
+        Debug:
+          CODE_SIGN_IDENTITY: Apple Development
+          # PROVISIONING_PROFILE_SPECIFIER: match Development com.company.app
+        Release:
+          CODE_SIGN_IDENTITY: Apple Development
+          # PROVISIONING_PROFILE_SPECIFIER: match AppStore com.company.app
+    dependencies:
+      - target: SwiftUINavigationFlow

@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-protocol Routable: Hashable {
+public protocol Routable: Hashable {
     func view() -> AnyView
     var title: String { get }
     var color: UIColor { get }

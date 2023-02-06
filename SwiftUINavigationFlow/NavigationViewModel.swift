@@ -7,11 +7,12 @@
 
 import Foundation
 
-class NavigationViewModel: ObservableObject {
+public class NavigationViewModel: ObservableObject {
     var oldPresentationType: PresentationType?
     var hasForcedDismiss: Bool = false
 
-    @Published var states: [NavigationState] {
+
+    @Published public var states: [NavigationState] {
         willSet (newValue) {
             if states.isEmpty && newValue.isEmpty {
                 return
@@ -35,7 +36,7 @@ class NavigationViewModel: ObservableObject {
     }
 
 
-    init() {
+    public init() {
         self.states = []
     }
 }

@@ -1,0 +1,24 @@
+targets:
+  SwiftUINavigationFlow:
+    type: framework
+    platform: iOS
+    deploymentTarget: "14.0"
+    sources:
+      - ${EXTERNAL_PATH}SwiftUINavigationFlow
+    info:
+      path: "plists/SwiftUINavigationFlow.plist"
+      properties:
+        CFBundleVersion: "${BUILD_NUMBER}"
+        CFBundleShortVersionString: "${VERSION_NUMBER}"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.bellots.SwiftUINavigationFlow
+        CODE_SIGN_STYLE: Automatic
+        GCC_OPTIMIZATION_LEVEL: 0
+      configs:
+        Debug:
+          CODE_SIGN_IDENTITY: Apple Development
+          # PROVISIONING_PROFILE_SPECIFIER: match Development com.company.app
+        Release:
+          CODE_SIGN_IDENTITY: Apple Development
+          # PROVISIONING_PROFILE_SPECIFIER: match AppStore com.company.app

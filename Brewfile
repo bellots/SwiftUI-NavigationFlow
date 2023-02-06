@@ -1,0 +1,2 @@
+# mint
+brew "mint"

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftUINavigationFlow
 
 struct ModalView: View {
     @StateObject var secondNavigationViewModel: NavigationViewModel = NavigationViewModel()
