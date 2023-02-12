@@ -28,7 +28,7 @@ public class NavigationViewModel: ObservableObject {
         }
     }
 
-    func dismissCurrent(forced: Bool) {
+    public func dismissCurrent(forced: Bool) {
         hasForcedDismiss = forced
         if !states.isEmpty {
             states.removeLast()
