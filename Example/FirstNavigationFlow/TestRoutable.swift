@@ -25,7 +25,7 @@ enum TestRoute: Routable {
         }
     }
 
-    var title: String {
+    var title: String? {
         switch self {
         case .firstView:
             return "firstView"

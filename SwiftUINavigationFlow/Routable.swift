@@ -10,6 +10,6 @@ import SwiftUI
 
 public protocol Routable: Hashable {
     func view() -> AnyView
-    var title: String { get }
+    var title: String? { get }
     var color: UIColor { get }
 }

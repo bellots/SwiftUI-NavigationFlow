@@ -10,7 +10,7 @@ import SwiftUI
 
 class MyUIHostingController<Content>: UIHostingController<Content> where Content: View {
     var isPoppingBack: () -> Void
-    var navigationTitle: String
+    var navigationTitle: String?
     var color: UIColor
 
     override func viewDidLoad() {
@@ -20,16 +20,28 @@ class MyUIHostingController<Content>: UIHostingController<Content> where Content
 //        self.navigationController?.navigationBar.tintColor = color
 //        self.title = navigationTitle
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
         self.navigationController?.navigationBar.tintColor = color
-        self.title = navigationTitle
+        if let navigationTitle {
+            self.navigationController?.navigationBar.backItem?.title = navigationTitle
+            navigationItem.backButtonDisplayMode = .minimal
+        } else {
+            navigationController?.setNavigationBarHidden(true, animated: animated)
+        }
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        if let navigationTitle {
+            self.navigationController?.navigationBar.backItem?.title = navigationTitle
+            navigationItem.backButtonDisplayMode = .minimal
+        } else {
+            navigationController?.setNavigationBarHidden(true, animated: animated)
+        }
+
         if self.isMovingFromParent {
             isPoppingBack()
         }
@@ -38,7 +50,7 @@ class MyUIHostingController<Content>: UIHostingController<Content> where Content
         }
     }
 
-    init(rootView: Content, title: String, color: UIColor, isPoppingBack: @escaping () -> Void) {
+    init(rootView: Content, title: String?, color: UIColor, isPoppingBack: @escaping () -> Void) {
         self.isPoppingBack = isPoppingBack
         self.navigationTitle = title
         self.color = color
@@ -47,7 +59,7 @@ class MyUIHostingController<Content>: UIHostingController<Content> where Content
     }
 
     override init(rootView: Content) {
-        self.navigationTitle = ""
+        self.navigationTitle = nil
         isPoppingBack = { }
         self.color = .blue
         super.init(rootView: rootView)

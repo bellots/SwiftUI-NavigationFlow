@@ -22,7 +22,7 @@ enum SecondRouteFlow: Routable {
         }
     }
 
-    var title: String {
+    var title: String? {
         switch self {
         case .secondFirst:
             return "secondFirst"
