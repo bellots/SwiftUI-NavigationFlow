@@ -41,7 +41,7 @@ enum TestRoute: Routable {
         case .firstView:
             return .black
         case .secondView:
-            return .yellow
+            return .red
         case .modalView:
             return .systemPink
         }

@@ -15,32 +15,40 @@ class MyUIHostingController<Content>: UIHostingController<Content> where Content
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationController?.navigationBar.backItem?.title = navigationTitle
+        UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
+        UINavigationBar.appearance().shadowImage = UIImage()
+        UINavigationBar.appearance().isTranslucent = true
+        self.navigationController?.navigationBar.backItem?.title = ""
+        self.navigationController?.navigationBar.tintColor = color
+        self.title = navigationTitle
         navigationItem.backButtonDisplayMode = .minimal
-//        self.navigationController?.navigationBar.tintColor = color
-//        self.title = navigationTitle
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        self.navigationController?.navigationBar.backItem?.title = ""
         self.navigationController?.navigationBar.tintColor = color
-        if let navigationTitle {
-            self.navigationController?.navigationBar.backItem?.title = navigationTitle
-            navigationItem.backButtonDisplayMode = .minimal
-        } else {
-            navigationController?.setNavigationBarHidden(true, animated: animated)
-        }
+        self.title = navigationTitle
+//        if let navigationTitle {
+//            self.title = navigationTitle
+//        } else {
+//            navigationController?.setNavigationBarHidden(true, animated: animated)
+//        }
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if let navigationTitle {
-            self.navigationController?.navigationBar.backItem?.title = navigationTitle
-            navigationItem.backButtonDisplayMode = .minimal
-        } else {
-            navigationController?.setNavigationBarHidden(true, animated: animated)
-        }
+        self.navigationController?.navigationBar.backItem?.title = ""
+        self.navigationController?.navigationBar.tintColor = color
+        self.title = navigationTitle
+
+//        if let navigationTitle {
+//            self.title = navigationTitle
+//            navigationItem.backButtonDisplayMode = .minimal
+//        } else {
+//            navigationController?.setNavigationBarHidden(true, animated: animated)
+//        }
 
         if self.isMovingFromParent {
             isPoppingBack()
