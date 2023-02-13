@@ -22,6 +22,7 @@ class MyUIHostingController<Content>: UIHostingController<Content> where Content
         self.navigationController?.navigationBar.tintColor = color
         self.title = navigationTitle
         navigationItem.backButtonDisplayMode = .minimal
+        self.view.backgroundColor = .clear
     }
 
     override func viewWillAppear(_ animated: Bool) {
