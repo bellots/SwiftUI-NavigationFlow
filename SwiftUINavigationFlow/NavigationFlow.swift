@@ -36,6 +36,8 @@ import SwiftUI
                     uiViewController.popViewController(animated: true)
                 case .present:
                     uiViewController.presentedViewController?.dismiss(animated: true)
+                case .presentFullScreen:
+                    uiViewController.presentedViewController?.dismiss(animated: true)
                 }
                 return
             }
@@ -47,6 +49,10 @@ import SwiftUI
                 case .push:
                     uiViewController.pushViewController(toPush, animated: true)
                 case .present:
+                    uiViewController.present(toPush, animated: true)
+                case .presentFullScreen:
+                    toPush.modalPresentationStyle = .overFullScreen
+                    toPush.modalTransitionStyle = .crossDissolve
                     uiViewController.present(toPush, animated: true)
                 }
             }

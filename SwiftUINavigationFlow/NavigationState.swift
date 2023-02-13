@@ -11,6 +11,7 @@ import SwiftUI
 public enum PresentationType {
     case push
     case present
+    case presentFullScreen
 }
 
 public struct NavigationState: Identifiable {
