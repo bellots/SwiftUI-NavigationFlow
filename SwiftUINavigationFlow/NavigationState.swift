@@ -16,7 +16,7 @@ public enum PresentationType {
 
 public struct NavigationState: Identifiable {
     public var id: UUID
-    var route: any Routable
+    public var route: any Routable
     var presentationType: PresentationType
 
     public init(id: UUID = UUID(), route: any Routable, presentationType: PresentationType) {
