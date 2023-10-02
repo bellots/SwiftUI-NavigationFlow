@@ -12,4 +12,5 @@ public protocol Routable: Hashable {
     func view() -> AnyView
     var title: String? { get }
     var color: UIColor { get }
+    var showNavigationBar: Bool { get }
 }

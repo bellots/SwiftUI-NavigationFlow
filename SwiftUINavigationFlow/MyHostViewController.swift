@@ -12,7 +12,8 @@ class MyUIHostingController<Content>: UIHostingController<Content> where Content
     var isPoppingBack: () -> Void
     var navigationTitle: String?
     var color: UIColor
-
+    var showNavigationBar: Bool
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
@@ -31,6 +32,7 @@ class MyUIHostingController<Content>: UIHostingController<Content> where Content
         self.navigationController?.navigationBar.backItem?.title = ""
         self.navigationController?.navigationBar.tintColor = color
         self.title = navigationTitle
+        self.navigationController?.isNavigationBarHidden = !showNavigationBar
 //        if let navigationTitle {
 //            self.title = navigationTitle
 //        } else {
@@ -43,7 +45,7 @@ class MyUIHostingController<Content>: UIHostingController<Content> where Content
         self.navigationController?.navigationBar.backItem?.title = ""
         self.navigationController?.navigationBar.tintColor = color
         self.title = navigationTitle
-
+        
 //        if let navigationTitle {
 //            self.title = navigationTitle
 //            navigationItem.backButtonDisplayMode = .minimal
@@ -59,10 +61,11 @@ class MyUIHostingController<Content>: UIHostingController<Content> where Content
         }
     }
 
-    init(rootView: Content, title: String?, color: UIColor, isPoppingBack: @escaping () -> Void) {
+    init(rootView: Content, title: String?, color: UIColor, showNavigationBar: Bool, isPoppingBack: @escaping () -> Void) {
         self.isPoppingBack = isPoppingBack
         self.navigationTitle = title
         self.color = color
+        self.showNavigationBar = showNavigationBar
         super.init(rootView: rootView)
 
     }
@@ -71,6 +74,7 @@ class MyUIHostingController<Content>: UIHostingController<Content> where Content
         self.navigationTitle = nil
         isPoppingBack = { }
         self.color = .blue
+        self.showNavigationBar = true
         super.init(rootView: rootView)
 
         // subscriptions to notifications will go here

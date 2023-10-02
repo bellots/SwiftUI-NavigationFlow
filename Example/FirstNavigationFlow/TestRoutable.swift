@@ -46,4 +46,8 @@ enum TestRoute: Routable {
             return .systemPink
         }
     }
+    
+    var showNavigationBar: Bool {
+        return true
+    }
 }
