@@ -39,4 +39,13 @@ enum SecondRouteFlow: Routable {
             return .purple
         }
     }
+    
+    var showNavigationBar: Bool {
+        switch self {
+        case .secondFirst:
+            return false
+        case .secondSecond:
+            return true
+        }
+    }
 }
