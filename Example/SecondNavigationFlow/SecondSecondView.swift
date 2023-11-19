@@ -6,10 +6,23 @@
 //
 
 import SwiftUI
+import SwiftUINavigationFlow
 
 struct SecondSecondView: View {
+
+    @EnvironmentObject var firstNavViewModel: NavigationViewModel
+    @EnvironmentObject var secondNavViewModel: NavigationViewModel
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            Text("Hello, World!")
+            Button {
+                secondNavViewModel.dismissCurrent(forced: true)
+            } label: {
+                Text("Back")
+            }
+
+        }
     }
 }
 

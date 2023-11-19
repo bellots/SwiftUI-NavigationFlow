@@ -9,8 +9,9 @@ import SwiftUI
 import SwiftUINavigationFlow
 
 struct SecondFirstView: View {
-    @EnvironmentObject var secondNavigationViewModel: NavigationViewModel
-
+    @EnvironmentObject var firstNavViewModel: NavigationViewModel
+    @EnvironmentObject var secondNavViewModel: NavigationViewModel
+    
     var body: some View {
         ZStack {
             Color.red
@@ -18,13 +19,14 @@ struct SecondFirstView: View {
             VStack {
                 Text("Hello, World!")
                 Button {
+                    secondNavViewModel.parentNavigationViewModel?.dismissCurrent(forced: true)
                     print("here should dismiss parent's navigationViewModel in some way")
                 } label: {
                     Text("Close the modal navigationController")
                 }
                 Button {
                     let navigationState = NavigationState(route: SecondRouteFlow.secondSecond, presentationType: .push)
-                    secondNavigationViewModel.states.append(navigationState)
+                    secondNavViewModel.states.append(navigationState)
                 } label: {
                     Text("Go to second second View")
                 }
