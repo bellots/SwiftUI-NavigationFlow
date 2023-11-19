@@ -11,13 +11,15 @@ import SwiftUI
 @MainActor public struct NavigationFlow<T: Routable>: UIViewControllerRepresentable {
 
     public typealias UIViewControllerType = UINavigationController
-
-    @EnvironmentObject var navigationViewModel: NavigationViewModel
-
+    
+    @ObservedObject var navigationViewModel: NavigationViewModel
+    
     var firstRoute: T
 
-    public init (firstRoute: T) {
+    public init (firstRoute: T,
+                 navigationViewModel: NavigationViewModel) {
         self.firstRoute = firstRoute
+        self.navigationViewModel = navigationViewModel
     }
 
     public func makeUIViewController(context: Context) -> UINavigationController {

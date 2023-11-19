@@ -10,7 +10,7 @@ import Foundation
 public class NavigationViewModel: ObservableObject {
     var oldPresentationType: PresentationType?
     var hasForcedDismiss: Bool = false
-
+    public var parentNavigationViewModel: NavigationViewModel?
 
     @Published public var states: [NavigationState] {
         willSet (newValue) {
@@ -36,7 +36,8 @@ public class NavigationViewModel: ObservableObject {
     }
 
 
-    public init() {
+    public init(parentNavigationViewModel: NavigationViewModel?) {
         self.states = []
+        self.parentNavigationViewModel = parentNavigationViewModel
     }
 }

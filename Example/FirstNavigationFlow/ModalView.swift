@@ -9,13 +9,20 @@ import SwiftUI
 import SwiftUINavigationFlow
 
 struct ModalView: View {
-    @StateObject var secondNavigationViewModel: NavigationViewModel = NavigationViewModel()
+    @ObservedObject var secondNavigationViewModel: NavigationViewModel
     // Questo ⬇️ non riesce a passare al secondo navigationFlow, anche se aggiungo il modifier environmentObject.
     @EnvironmentObject var firstNavigationViewModel: NavigationViewModel
 
     var body: some View {
-        NavigationFlow<SecondRouteFlow>(firstRoute: .secondFirst)
-            .environmentObject(secondNavigationViewModel)
+        NavigationFlow<SecondRouteFlow>(firstRoute: .secondFirst, navigationViewModel: secondNavigationViewModel)
+            .environmentObject(firstNavigationViewModel)
+            .onAppear {
+                secondNavigationViewModel.parentNavigationViewModel = firstNavigationViewModel
+            }
+    }
+    
+    init() {
+        self.secondNavigationViewModel = NavigationViewModel(parentNavigationViewModel: nil)
     }
 }
 

@@ -9,11 +9,10 @@ import SwiftUI
 import SwiftUINavigationFlow
 
 struct ContentView: View {
-    @StateObject var viewModel: NavigationViewModel = NavigationViewModel()
+    @StateObject var viewModel: NavigationViewModel = NavigationViewModel(parentNavigationViewModel: nil)
 
     var body: some View {
-        NavigationFlow<TestRoute>(firstRoute: .firstView)
-            .environmentObject(viewModel)
+        NavigationFlow<TestRoute>(firstRoute: .firstView, navigationViewModel: viewModel)
     }
 }
 

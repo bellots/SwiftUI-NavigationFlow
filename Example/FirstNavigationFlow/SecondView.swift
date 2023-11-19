@@ -17,9 +17,9 @@ struct SecondView: View {
             Button {
                 
                 let navigationState = NavigationState(route: TestRoute.firstView, presentationType: .push)
-                firstNavigationViewModel.states.append(navigationState)
-//                firstNavigationViewModel
-//                    .dismissCurrent(forced: true)
+//                firstNavigationViewModel.states.append(navigationState)
+                firstNavigationViewModel
+                    .dismissCurrent(forced: true)
             } label: {
                 Text("Torna indietro")
             }
