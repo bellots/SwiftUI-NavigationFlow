@@ -34,6 +34,15 @@ public class NavigationViewModel: ObservableObject {
             states.removeLast()
         }
     }
+    
+    public func present(state: NavigationState) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else {
+                return
+            }
+            self.states.append(state)
+        }
+    }
 
 
     public init(parentNavigationViewModel: NavigationViewModel?) {
