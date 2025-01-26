@@ -25,3 +25,15 @@ public struct NavigationState: Identifiable {
         self.presentationType = presentationType
     }
 }
+
+extension NavigationState: Hashable {
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+}
+
+extension NavigationState: Equatable {
+    public static func == (lhs: NavigationState, rhs: NavigationState) -> Bool {
+        return lhs.id == rhs.id
+    }
+}

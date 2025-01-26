@@ -10,7 +10,6 @@ import SwiftUINavigationFlow
 
 struct ThirdSecondView: View {
 
-    @EnvironmentObject var firstNavViewModel: NavigationViewModel
     @EnvironmentObject var secondNavViewModel: NavigationViewModel
     
     var body: some View {
