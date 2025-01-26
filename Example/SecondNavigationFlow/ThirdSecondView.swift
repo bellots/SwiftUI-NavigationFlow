@@ -1,14 +1,14 @@
 //
-//  SecondSecondView.swift
-//  TestRouterNavigation
+//  ThirdSecondView.swift
+//  SwiftUI-NavigationFlow
 //
-//  Created by Andrea Bellotto on 30/12/22.
+//  Created by Andrea Bellotto on 26/01/25.
 //
 
 import SwiftUI
 import SwiftUINavigationFlow
 
-struct SecondSecondView: View {
+struct ThirdSecondView: View {
 
     @EnvironmentObject var firstNavViewModel: NavigationViewModel
     @EnvironmentObject var secondNavViewModel: NavigationViewModel
@@ -20,24 +20,26 @@ struct SecondSecondView: View {
                 secondNavViewModel.dismissCurrent(forced: true)
             } label: {
                 Text("Back")
-            }
-            Button {
-                let state = NavigationState(route: SecondRouteFlow.thirdSecond, presentationType: .presentFullScreen)
-                secondNavViewModel.states.append(state)
-            } label: {
-                Text("Show another modal")
+                    .foregroundColor(.white)
             }
         }
+        .padding(20)
+        .background(
+            Color.blue
+                .cornerRadius(20)
+                .shadow(
+                radius: 10
+            )
+        )
         .frame(maxWidth: .infinity)
         .frame(maxHeight: .infinity)
-        .background(Color.green)
         .ignoresSafeArea()
 
     }
 }
 
-struct SecondSecondView_Previews: PreviewProvider {
+struct ThirdSecondView_Previews: PreviewProvider {
     static var previews: some View {
-        SecondSecondView()
+        ThirdSecondView()
     }
 }
