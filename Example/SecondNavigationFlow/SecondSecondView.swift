@@ -10,7 +10,6 @@ import SwiftUINavigationFlow
 
 struct SecondSecondView: View {
 
-    @EnvironmentObject var firstNavViewModel: NavigationViewModel
     @EnvironmentObject var secondNavViewModel: NavigationViewModel
     
     var body: some View {
@@ -26,6 +25,11 @@ struct SecondSecondView: View {
                 secondNavViewModel.states.append(state)
             } label: {
                 Text("Show another modal")
+            }
+            Button {
+                secondNavViewModel.parentNavigationViewModel?.dismissCurrent(forced: true)
+            } label: {
+                Text("Dismiss first modal")
             }
         }
         .frame(maxWidth: .infinity)
