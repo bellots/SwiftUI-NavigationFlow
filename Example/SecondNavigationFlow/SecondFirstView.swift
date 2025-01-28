@@ -9,7 +9,6 @@ import SwiftUI
 import SwiftUINavigationFlow
 
 struct SecondFirstView: View {
-    @EnvironmentObject var firstNavViewModel: NavigationViewModel
     @EnvironmentObject var secondNavViewModel: NavigationViewModel
     
     var body: some View {

@@ -12,6 +12,7 @@ import SwiftUINavigationFlow
 enum SecondRouteFlow: Routable {
     case secondFirst
     case secondSecond
+    case thirdSecond
 
     func view() -> AnyView {
         switch self {
@@ -19,6 +20,8 @@ enum SecondRouteFlow: Routable {
             return AnyView(SecondFirstView())
         case .secondSecond:
             return AnyView(SecondSecondView())
+        case .thirdSecond:
+            return AnyView(ThirdSecondView())
         }
     }
 
@@ -28,6 +31,8 @@ enum SecondRouteFlow: Routable {
             return "secondFirst"
         case .secondSecond:
             return "secondSecond"
+        case .thirdSecond:
+            return "thirdSecond"
         }
     }
 
@@ -37,6 +42,8 @@ enum SecondRouteFlow: Routable {
             return .red
         case .secondSecond:
             return .purple
+        case .thirdSecond:
+            return .blue
         }
     }
     
@@ -45,6 +52,8 @@ enum SecondRouteFlow: Routable {
         case .secondFirst:
             return false
         case .secondSecond:
+            return true
+        case .thirdSecond:
             return true
         }
     }
