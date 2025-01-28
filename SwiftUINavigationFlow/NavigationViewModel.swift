@@ -12,6 +12,8 @@ public class NavigationViewModel: ObservableObject {
     var hasForcedDismiss: Bool = false
     public var parentNavigationViewModel: NavigationViewModel?
 
+    public var dismissingCompletion: (() -> Void)?
+    
     @Published public var states: [NavigationState] {
         willSet (newValue) {
             if states.isEmpty && newValue.isEmpty {
@@ -28,8 +30,9 @@ public class NavigationViewModel: ObservableObject {
         }
     }
 
-    public func dismissCurrent(forced: Bool) {
+    public func dismissCurrent(forced: Bool, completion: (() -> Void)? = nil) {
         hasForcedDismiss = forced
+        self.dismissingCompletion = completion
         if !states.isEmpty {
             states.removeLast()
         }
