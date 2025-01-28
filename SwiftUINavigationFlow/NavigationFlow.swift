@@ -37,9 +37,13 @@ import SwiftUI
                 case .push:
                     uiViewController.popViewController(animated: true)
                 case .present:
-                    uiViewController.presentedViewController?.dismiss(animated: true)
+                    uiViewController.presentedViewController?.dismiss(animated: true) {
+                        navigationViewModel.dismissingCompletion?()
+                    }
                 case .presentFullScreen:
-                    uiViewController.presentedViewController?.dismiss(animated: true)
+                    uiViewController.presentedViewController?.dismiss(animated: true) {
+                        navigationViewModel.dismissingCompletion?()
+                    }
                 }
                 return
             }
@@ -67,7 +71,7 @@ import SwiftUI
                 navigationViewModel.hasForcedDismiss = false
                 return
             }
-            navigationViewModel.dismissCurrent(forced: false)
+            navigationViewModel.dismissCurrent(forced: false, completion: nil)
         }
     }
 }

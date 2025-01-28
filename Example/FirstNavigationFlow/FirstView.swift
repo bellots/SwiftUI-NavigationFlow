@@ -25,6 +25,19 @@ struct FirstView: View {
             } label: {
                 Text("Open modalView!")
             }
+            
+            Button {
+                navigationViewModel.states.append(.init(route: TestRoute.loadingView, presentationType: .presentFullScreen))
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
+                    navigationViewModel.dismissCurrent(forced: true) {
+                        navigationViewModel.states.append(.init(route: TestRoute.errorView, presentationType: .presentFullScreen))
+                    }
+                })
+                
+            } label: {
+                Text("Try to lunch a loader that shows an errorView later")
+            }
         }
     }
 }
