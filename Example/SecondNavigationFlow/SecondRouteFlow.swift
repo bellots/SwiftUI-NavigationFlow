@@ -14,16 +14,21 @@ enum SecondRouteFlow: Routable {
     case secondSecond
     case thirdSecond
 
-    func view() -> AnyView {
+    @ViewBuilder
+    func view() -> some View {
         switch self {
         case .secondFirst:
-            return AnyView(SecondFirstView())
+            SecondFirstView()
         case .secondSecond:
-            return AnyView(SecondSecondView())
+            SecondSecondView()
         case .thirdSecond:
-            return AnyView(ThirdSecondView())
+            ThirdSecondView()
         }
     }
+
+    // The compiler will infer the RouteView associated type from the view() method
+    // but we can also explicitly declare it if we want:
+    // typealias RouteView = AnyView // This line is optional since Swift can infer it
 
     var title: String? {
         switch self {
