@@ -16,20 +16,25 @@ enum TestRoute: Routable {
     case loadingView
     case errorView
     
-    func view() -> AnyView {
+    @ViewBuilder
+    func view() -> some View {
         switch self {
         case .firstView:
-            return AnyView(FirstView())
+            FirstView()
         case .secondView:
-            return AnyView(SecondView())
+            SecondView()
         case .modalView:
-            return AnyView(ModalView())
+            ModalView()
         case .loadingView:
-            return AnyView(LoadingView())
+            LoadingView()
         case .errorView:
-            return AnyView(ErrorView())
+            ErrorView()
         }
     }
+
+    // The compiler will infer the RouteView associated type from the view() method
+    // It will be a concrete type representing the entire view hierarchy
+    // We don't need to specify it explicitly as Swift can infer it
 
     var title: String? {
         switch self {
