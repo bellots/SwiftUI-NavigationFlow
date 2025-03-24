@@ -65,7 +65,7 @@ import SwiftUI
         }
     }
 
-    fileprivate func viewController<T: Routable>(from route: T) -> UIViewController {
+    fileprivate func viewController<Route: Routable>(from route: Route) -> UIViewController {
         return MyUIHostingController(rootView: route.view().environmentObject(navigationViewModel), title: route.title, color: route.color, showNavigationBar: route.showNavigationBar) {
             if navigationViewModel.hasForcedDismiss {
                 navigationViewModel.hasForcedDismiss = false

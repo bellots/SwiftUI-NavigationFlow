@@ -57,7 +57,7 @@ enum SecondRouteFlow: Routable {
         case .secondFirst:
             return false
         case .secondSecond:
-            return true
+            return false
         case .thirdSecond:
             return true
         }
