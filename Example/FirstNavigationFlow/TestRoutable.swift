@@ -67,7 +67,12 @@ enum TestRoute: Routable {
     }
     
     var showNavigationBar: Bool {
-        return true
+        switch self {
+        case .secondView:
+            return false
+        default:
+            return true
+        }
     }
 }
 

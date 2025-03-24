@@ -32,26 +32,14 @@ class MyUIHostingController<Content>: UIHostingController<Content> where Content
         self.navigationController?.navigationBar.backItem?.title = ""
         self.navigationController?.navigationBar.tintColor = color
         self.title = navigationTitle
-        self.navigationController?.isNavigationBarHidden = !showNavigationBar
-//        if let navigationTitle {
-//            self.title = navigationTitle
-//        } else {
-//            navigationController?.setNavigationBarHidden(true, animated: animated)
-//        }
+        self.navigationController?.navigationBar.isHidden = !showNavigationBar
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.navigationController?.navigationBar.backItem?.title = ""
         self.navigationController?.navigationBar.tintColor = color
-        self.title = navigationTitle
-        
-//        if let navigationTitle {
-//            self.title = navigationTitle
-//            navigationItem.backButtonDisplayMode = .minimal
-//        } else {
-//            navigationController?.setNavigationBarHidden(true, animated: animated)
-//        }
+        self.title = ""
 
         if self.isMovingFromParent {
             isPoppingBack()
