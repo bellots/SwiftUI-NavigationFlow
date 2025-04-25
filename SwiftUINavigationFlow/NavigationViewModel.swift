@@ -29,15 +29,15 @@ public class NavigationViewModel: ObservableObject {
 
         }
     }
-
+    
     public func dismissCurrent(forced: Bool, completion: (() -> Void)? = nil) {
-        hasForcedDismiss = forced
-        self.dismissingCompletion = completion
-        if !states.isEmpty {
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else {
-                    return
-                }
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else {
+                return
+            }
+            hasForcedDismiss = forced
+            self.dismissingCompletion = completion
+            if !states.isEmpty {
                 states.removeLast()
             }
         }
