@@ -34,7 +34,12 @@ public class NavigationViewModel: ObservableObject {
         hasForcedDismiss = forced
         self.dismissingCompletion = completion
         if !states.isEmpty {
-            states.removeLast()
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else {
+                    return
+                }
+                states.removeLast()
+            }
         }
     }
     

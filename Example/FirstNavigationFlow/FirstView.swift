@@ -36,7 +36,7 @@ struct FirstView: View {
                 })
                 
             } label: {
-                Text("Try to lunch a loader that shows an errorView later")
+                Text("Try to launch a loader that shows an errorView later")
             }
         }
     }

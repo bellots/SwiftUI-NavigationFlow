@@ -12,7 +12,7 @@ struct ErrorView: View {
                 .foregroundColor(.white)
 
             Button {
-                
+                navViewModel.dismissCurrent(forced: true)
             } label: {
                 Text("Try again!")
             }
