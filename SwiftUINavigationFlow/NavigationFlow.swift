@@ -82,6 +82,10 @@ import SwiftUI
                         .navigationTitle(state.route.title ?? "")
                 }
         }
+        // Ensure the navigation bar background is always visible, even when the
+        // root view is not scrollable (SwiftUI NavigationStack uses a transparent
+        // bar by default until content scrolls behind it).
+        .toolbarBackground(.visible, for: .navigationBar)
         .sheet(item: sheetState) { state in
             state.makeView()
                 .environmentObject(navigationViewModel)
