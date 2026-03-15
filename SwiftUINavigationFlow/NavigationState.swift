@@ -18,17 +18,19 @@ public struct NavigationState: Identifiable {
     public var id: UUID
     public var route: any Routable
     var presentationType: PresentationType
-    private let cachedView: AnyView
+    // Stores a factory closure that captures the concrete Routable type so that
+    // the view can be created on demand without leaking AnyView into this struct.
+    private let viewFactory: () -> any View
 
     public init<R: Routable>(id: UUID = UUID(), route: R, presentationType: PresentationType) {
         self.id = id
         self.route = route
         self.presentationType = presentationType
-        self.cachedView = AnyView(route.view())
+        self.viewFactory = { route.view() }
     }
 
-    func makeView() -> AnyView {
-        cachedView
+    func makeView() -> any View {
+        viewFactory()
     }
 }
 
