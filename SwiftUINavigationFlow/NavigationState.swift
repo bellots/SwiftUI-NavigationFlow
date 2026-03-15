@@ -18,11 +18,17 @@ public struct NavigationState: Identifiable {
     public var id: UUID
     public var route: any Routable
     var presentationType: PresentationType
+    private let viewFactory: () -> AnyView
 
-    public init(id: UUID = UUID(), route: any Routable, presentationType: PresentationType) {
+    public init<R: Routable>(id: UUID = UUID(), route: R, presentationType: PresentationType) {
         self.id = id
         self.route = route
         self.presentationType = presentationType
+        self.viewFactory = { AnyView(route.view()) }
+    }
+
+    func makeView() -> AnyView {
+        viewFactory()
     }
 }
 

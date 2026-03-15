@@ -32,10 +32,6 @@ enum TestRoute: Routable {
         }
     }
 
-    // The compiler will infer the RouteView associated type from the view() method
-    // It will be a concrete type representing the entire view hierarchy
-    // We don't need to specify it explicitly as Swift can infer it
-
     var title: String? {
         switch self {
         case .firstView:
@@ -48,30 +44,6 @@ enum TestRoute: Routable {
             return nil
         case .errorView:
             return nil
-        }
-    }
-
-    var color: UIColor {
-        switch self {
-        case .firstView:
-            return .black
-        case .secondView:
-            return .red
-        case .modalView:
-            return .systemPink
-        case .loadingView:
-            return .black
-        case .errorView:
-            return .black
-        }
-    }
-    
-    var showNavigationBar: Bool {
-        switch self {
-        case .secondView:
-            return false
-        default:
-            return true
         }
     }
 }

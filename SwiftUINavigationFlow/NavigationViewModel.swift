@@ -8,53 +8,36 @@
 import Foundation
 
 public class NavigationViewModel: ObservableObject {
-    var oldPresentationType: PresentationType?
-    var hasForcedDismiss: Bool = false
+    /// Duration to wait after a dismiss before running a completion callback,
+    /// matching the default SwiftUI modal dismiss animation.
+    public static let dismissAnimationDuration: TimeInterval = 0.5
+
     public var parentNavigationViewModel: NavigationViewModel?
 
-    public var dismissingCompletion: (() -> Void)?
-    
-    @Published public var states: [NavigationState] {
-        willSet (newValue) {
-            if states.isEmpty && newValue.isEmpty {
-                return
-            }
-            if states.count > newValue.count {
-                // vuol dire che sta facendo pop/dismiss
-                oldPresentationType = states.last?.presentationType
-            }
-            else {
-                oldPresentationType = nil
-            }
+    @Published public var states: [NavigationState] = []
 
-        }
-    }
-    
-    public func dismissCurrent(forced: Bool, completion: (() -> Void)? = nil) {
+    public func dismissCurrent(forced: Bool = false, completion: (() -> Void)? = nil) {
         DispatchQueue.main.async { [weak self] in
-            guard let self = self else {
-                return
+            guard let self = self else { return }
+            if !self.states.isEmpty {
+                self.states.removeLast()
             }
-            hasForcedDismiss = forced
-            self.dismissingCompletion = completion
-            if !states.isEmpty {
-                states.removeLast()
+            if let completion = completion {
+                DispatchQueue.main.asyncAfter(deadline: .now() + NavigationViewModel.dismissAnimationDuration) {
+                    completion()
+                }
             }
         }
     }
-    
+
     public func present(state: NavigationState) {
         DispatchQueue.main.async { [weak self] in
-            guard let self = self else {
-                return
-            }
+            guard let self = self else { return }
             self.states.append(state)
         }
     }
 
-
-    public init(parentNavigationViewModel: NavigationViewModel?) {
-        self.states = []
+    public init(parentNavigationViewModel: NavigationViewModel? = nil) {
         self.parentNavigationViewModel = parentNavigationViewModel
     }
 }

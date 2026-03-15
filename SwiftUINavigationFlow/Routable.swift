@@ -12,6 +12,4 @@ public protocol Routable: Hashable {
     associatedtype RouteView: View
     @ViewBuilder func view() -> RouteView
     var title: String? { get }
-    var color: UIColor { get }
-    var showNavigationBar: Bool { get }
 }
