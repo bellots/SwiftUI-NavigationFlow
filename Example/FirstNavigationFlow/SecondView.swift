@@ -24,6 +24,7 @@ struct SecondView: View {
                 Text("Torna indietro")
             }
         }
+        .toolbar(.hidden, for: .navigationBar)
     }
 }
 
