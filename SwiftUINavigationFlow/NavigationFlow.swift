@@ -8,70 +8,91 @@
 import Foundation
 import SwiftUI
 
-@MainActor public struct NavigationFlow<T: Routable>: UIViewControllerRepresentable {
+@MainActor public struct NavigationFlow<T: Routable>: View {
 
-    public typealias UIViewControllerType = UINavigationController
-    
     @ObservedObject var navigationViewModel: NavigationViewModel
-    
+
     var firstRoute: T
 
-    public init (firstRoute: T,
-                 navigationViewModel: NavigationViewModel) {
+    public init(firstRoute: T,
+                navigationViewModel: NavigationViewModel) {
         self.firstRoute = firstRoute
         self.navigationViewModel = navigationViewModel
     }
 
-    public func makeUIViewController(context: Context) -> UINavigationController {
-        let state = firstRoute
-        return UINavigationController(rootViewController: viewController(from: state))
-    }
-
-    public func updateUIViewController(_ uiViewController: UINavigationController, context: Context) {
-        if let oldPresentationType = navigationViewModel.oldPresentationType {
-            if !navigationViewModel.hasForcedDismiss {
-                return
-            }
-            else {
-                switch oldPresentationType {
-                case .push:
-                    uiViewController.popViewController(animated: true)
-                case .present:
-                    uiViewController.presentedViewController?.dismiss(animated: true) {
-                        navigationViewModel.dismissingCompletion?()
-                    }
-                case .presentFullScreen:
-                    uiViewController.presentedViewController?.dismiss(animated: true) {
-                        navigationViewModel.dismissingCompletion?()
+    // Binding for the NavigationStack push path (only .push states)
+    private var pushPath: Binding<[NavigationState]> {
+        Binding(
+            get: {
+                navigationViewModel.states.filter { $0.presentationType == .push }
+            },
+            set: { newPath in
+                let pushStates = navigationViewModel.states.filter { $0.presentationType == .push }
+                guard newPath.count < pushStates.count else { return }
+                var states = navigationViewModel.states
+                let removedCount = pushStates.count - newPath.count
+                for _ in 0..<removedCount {
+                    if let lastPushIndex = states.lastIndex(where: { $0.presentationType == .push }) {
+                        states.remove(at: lastPushIndex)
                     }
                 }
-                return
+                navigationViewModel.states = states
             }
-        }
-        else {
-            if let lastNavState = navigationViewModel.states.last {
-                let toPush = viewController(from: lastNavState.route)
-                switch lastNavState.presentationType {
-                case .push:
-                    uiViewController.pushViewController(toPush, animated: true)
-                case .present:
-                    uiViewController.present(toPush, animated: true)
-                case .presentFullScreen:
-                    toPush.modalPresentationStyle = .overFullScreen
-                    toPush.modalTransitionStyle = .crossDissolve
-                    uiViewController.present(toPush, animated: true)
-                }
-            }
-        }
+        )
     }
 
-    fileprivate func viewController<Route: Routable>(from route: Route) -> UIViewController {
-        return MyUIHostingController(rootView: route.view().environmentObject(navigationViewModel), title: route.title, color: route.color, showNavigationBar: route.showNavigationBar) {
-            if navigationViewModel.hasForcedDismiss {
-                navigationViewModel.hasForcedDismiss = false
-                return
+    // Binding for the currently presented sheet (.present)
+    private var sheetState: Binding<NavigationState?> {
+        Binding(
+            get: {
+                navigationViewModel.states.last(where: { $0.presentationType == .present })
+            },
+            set: { newValue in
+                guard newValue == nil else { return }
+                if let lastIndex = navigationViewModel.states.lastIndex(where: { $0.presentationType == .present }) {
+                    navigationViewModel.states.remove(at: lastIndex)
+                }
             }
-            navigationViewModel.dismissCurrent(forced: false, completion: nil)
+        )
+    }
+
+    // Binding for the currently presented full-screen cover (.presentFullScreen)
+    private var fullScreenState: Binding<NavigationState?> {
+        Binding(
+            get: {
+                navigationViewModel.states.last(where: { $0.presentationType == .presentFullScreen })
+            },
+            set: { newValue in
+                guard newValue == nil else { return }
+                if let lastIndex = navigationViewModel.states.lastIndex(where: { $0.presentationType == .presentFullScreen }) {
+                    navigationViewModel.states.remove(at: lastIndex)
+                }
+            }
+        )
+    }
+
+    public var body: some View {
+        NavigationStack(path: pushPath) {
+            firstRoute.view()
+                .environmentObject(navigationViewModel)
+                .navigationTitle(firstRoute.title ?? "")
+                .navigationDestination(for: NavigationState.self) { state in
+                    AnyView(state.makeView())
+                        .environmentObject(navigationViewModel)
+                        .navigationTitle(state.route.title ?? "")
+                }
+        }
+        // Ensure the navigation bar background is always visible, even when the
+        // root view is not scrollable (SwiftUI NavigationStack uses a transparent
+        // bar by default until content scrolls behind it).
+        .toolbarBackground(.visible, for: .navigationBar)
+        .sheet(item: sheetState) { state in
+            AnyView(state.makeView())
+                .environmentObject(navigationViewModel)
+        }
+        .fullScreenCover(item: fullScreenState) { state in
+            AnyView(state.makeView())
+                .environmentObject(navigationViewModel)
         }
     }
 }

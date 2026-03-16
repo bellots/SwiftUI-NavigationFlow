@@ -26,10 +26,6 @@ enum SecondRouteFlow: Routable {
         }
     }
 
-    // The compiler will infer the RouteView associated type from the view() method
-    // but we can also explicitly declare it if we want:
-    // typealias RouteView = AnyView // This line is optional since Swift can infer it
-
     var title: String? {
         switch self {
         case .secondFirst:
@@ -38,28 +34,6 @@ enum SecondRouteFlow: Routable {
             return "secondSecond"
         case .thirdSecond:
             return "thirdSecond"
-        }
-    }
-
-    var color: UIColor {
-        switch self {
-        case .secondFirst:
-            return .red
-        case .secondSecond:
-            return .purple
-        case .thirdSecond:
-            return .blue
-        }
-    }
-    
-    var showNavigationBar: Bool {
-        switch self {
-        case .secondFirst:
-            return false
-        case .secondSecond:
-            return false
-        case .thirdSecond:
-            return true
         }
     }
 }

@@ -36,7 +36,7 @@ struct SecondSecondView: View {
         .frame(maxHeight: .infinity)
         .background(Color.green)
         .ignoresSafeArea()
-
+        .toolbar(.hidden, for: .navigationBar)
     }
 }
 

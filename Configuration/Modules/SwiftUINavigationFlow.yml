@@ -2,7 +2,7 @@ targets:
   SwiftUINavigationFlow:
     type: framework
     platform: iOS
-    deploymentTarget: "14.0"
+    deploymentTarget: "16.0"
     sources:
       - ${EXTERNAL_PATH}SwiftUINavigationFlow
     info:
