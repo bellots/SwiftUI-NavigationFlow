@@ -2,7 +2,7 @@ targets:
   Example:
     type: application
     platform: iOS
-    deploymentTarget: "14.0"
+    deploymentTarget: "16.0"
     sources: [Example]
     info:
       path: "plists/Example.plist"

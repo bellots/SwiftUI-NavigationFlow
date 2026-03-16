@@ -31,6 +31,7 @@ struct SecondFirstView: View {
                 }
             }
         }
+        .toolbar(.hidden, for: .navigationBar)
     }
 }
 
