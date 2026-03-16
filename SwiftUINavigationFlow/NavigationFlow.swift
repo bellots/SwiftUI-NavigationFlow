@@ -77,7 +77,7 @@ import SwiftUI
                 .environmentObject(navigationViewModel)
                 .navigationTitle(firstRoute.title ?? "")
                 .navigationDestination(for: NavigationState.self) { state in
-                    AnyView(state.makeView())
+                    state.makeView()
                         .environmentObject(navigationViewModel)
                         .navigationTitle(state.route.title ?? "")
                 }
@@ -87,11 +87,11 @@ import SwiftUI
         // bar by default until content scrolls behind it).
         .toolbarBackground(.visible, for: .navigationBar)
         .sheet(item: sheetState) { state in
-            AnyView(state.makeView())
+            state.makeView()
                 .environmentObject(navigationViewModel)
         }
         .fullScreenCover(item: fullScreenState) { state in
-            AnyView(state.makeView())
+            state.makeView()
                 .environmentObject(navigationViewModel)
         }
     }

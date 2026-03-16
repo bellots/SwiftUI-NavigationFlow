@@ -18,19 +18,20 @@ public struct NavigationState: Identifiable {
     public var id: UUID
     public var route: any Routable
     var presentationType: PresentationType
-    // Stores a factory closure that captures the concrete Routable type so that
-    // the view can be created on demand without leaking AnyView into this struct.
-    private let viewFactory: () -> any View
+    // Stores the type-erased view exactly once, at init time while the concrete
+    // Routable type R is still in scope.  Callers receive an AnyView directly and
+    // never need to wrap the result themselves.
+    private let _view: AnyView
 
     public init<R: Routable>(id: UUID = UUID(), route: R, presentationType: PresentationType) {
         self.id = id
         self.route = route
         self.presentationType = presentationType
-        self.viewFactory = { route.view() }
+        self._view = AnyView(route.view())
     }
 
-    func makeView() -> any View {
-        viewFactory()
+    func makeView() -> AnyView {
+        _view
     }
 }
 
