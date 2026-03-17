@@ -77,14 +77,14 @@ import SwiftUI
                         .environmentObject(navigationViewModel)
                         .navigationTitle(state.route.title ?? "")
                 }
-        }
-        .sheet(item: sheetState) { state in
-            state.makeView()
-                .environmentObject(navigationViewModel)
-        }
-        .fullScreenCover(item: fullScreenState) { state in
-            state.makeView()
-                .environmentObject(navigationViewModel)
+                .sheet(item: sheetState) { state in
+                    state.makeView()
+                        .environmentObject(navigationViewModel)
+                }
+                .fullScreenCover(item: fullScreenState) { state in
+                    state.makeView()
+                        .environmentObject(navigationViewModel)
+                }
         }
     }
 }
