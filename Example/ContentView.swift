@@ -9,8 +9,10 @@ import SwiftUI
 import SwiftUINavigationFlow
 
 struct ContentView: View {
+    @StateObject private var mainViewModel = NavigationViewModel()
+
     var body: some View {
-        TabBarView()
+        NavigationFlow<TestRoute>(firstRoute: TestRoute.firstView, navigationViewModel: mainViewModel)
     }
 }
 
