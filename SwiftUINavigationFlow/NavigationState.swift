@@ -7,7 +7,6 @@
 
 import Foundation
 import SwiftUI
-import UIKit
 
 public enum PresentationType {
     case push
@@ -20,23 +19,21 @@ public struct NavigationState: Identifiable {
     public var route: any Routable
     var presentationType: PresentationType
     /// Captured at init time while the concrete `Routable` type `R` is still
-    /// known, so the resulting `UIHostingController` carries the real view type
-    /// rather than the erased `AnyView`.
-    private let _vcFactory: (NavigationViewModel) -> UIViewController
+    /// known, so the resulting `AnyView` wraps the real view type rather than
+    /// an opaque existential.
+    private let _viewFactory: (NavigationViewModel) -> AnyView
 
     public init<R: Routable>(id: UUID = UUID(), route: R, presentationType: PresentationType) {
         self.id = id
         self.route = route
         self.presentationType = presentationType
-        self._vcFactory = { navigationViewModel in
-            let vc = UIHostingController(rootView: route.view().environmentObject(navigationViewModel))
-            vc.navigationItem.title = route.title
-            return vc
+        self._viewFactory = { navigationViewModel in
+            AnyView(route.view().environmentObject(navigationViewModel))
         }
     }
 
-    func makeViewController(navigationViewModel: NavigationViewModel) -> UIViewController {
-        _vcFactory(navigationViewModel)
+    func makeView(navigationViewModel: NavigationViewModel) -> AnyView {
+        _viewFactory(navigationViewModel)
     }
 }
 
