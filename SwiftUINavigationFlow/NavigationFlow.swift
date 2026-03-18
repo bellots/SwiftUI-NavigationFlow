@@ -28,11 +28,11 @@ import SwiftUI
     // MARK: - Constants
 
     /// Duration of the push/pop slide animation.
-    private static let pushAnimationDuration: TimeInterval = 0.35
+    private let pushAnimationDuration: TimeInterval = 0.35
     /// Maximum X position of a touch that counts as starting from the left edge.
-    private static let edgeDetectionWidth: CGFloat = 25
+    private let edgeDetectionWidth: CGFloat = 25
     /// Minimum horizontal swipe distance required to trigger a pop.
-    private static let minimumSwipeDistance: CGFloat = 80
+    private let minimumSwipeDistance: CGFloat = 80
 
     // MARK: - Derived state
 
@@ -64,15 +64,15 @@ import SwiftUI
                     .transition(.move(edge: .trailing))
             }
         }
-        .animation(.easeInOut(duration: Self.pushAnimationDuration), value: pushStates.count)
+        .animation(.easeInOut(duration: pushAnimationDuration), value: pushStates.count)
         // Left-edge swipe to pop the top pushed screen, mirroring the
         // UINavigationController interactive-pop gesture.
         .simultaneousGesture(
             DragGesture(minimumDistance: 20, coordinateSpace: .global)
                 .onEnded { value in
                     guard !pushStates.isEmpty,
-                          value.startLocation.x < Self.edgeDetectionWidth,
-                          value.translation.width > Self.minimumSwipeDistance,
+                          value.startLocation.x < edgeDetectionWidth,
+                          value.translation.width > minimumSwipeDistance,
                           abs(value.translation.height) < abs(value.translation.width)
                     else { return }
                     navigationViewModel.dismissCurrent()
