@@ -6,14 +6,15 @@
 //
 
 import SwiftUI
-import UIKit
-import Combine
 
-/// A navigation container that wraps a `UINavigationController` so that every
-/// pushed destination lives in its own `UIHostingController`.  This keeps the
-/// Xcode view-debugger hierarchy flat and readable: you see the real screen type
-/// (`HomeView`, `ExploreView`, …) directly instead of layers of `ModifiedContent`.
-@MainActor public struct NavigationFlow<T: Routable>: UIViewControllerRepresentable {
+/// A custom navigation container that drives push navigation with SwiftUI slide
+/// transitions and modals with native sheet / full-screen-cover presentation,
+/// without relying on `UINavigationController` or `NavigationStack`.
+///
+/// Every destination lives in the same SwiftUI `ZStack`, so the Xcode 3D view
+/// debugger shows all screens as real view nodes in the tree rather than opaque
+/// `UIHostingController` wrappers.
+@MainActor public struct NavigationFlow<T: Routable>: View {
 
     @ObservedObject var navigationViewModel: NavigationViewModel
     var firstRoute: T
@@ -24,153 +25,98 @@ import Combine
         self.navigationViewModel = navigationViewModel
     }
 
-    public func makeCoordinator() -> Coordinator {
-        Coordinator(firstRoute: firstRoute, navigationViewModel: navigationViewModel)
+    // MARK: - Constants
+
+    /// Duration of the push/pop slide animation.
+    private static let pushAnimationDuration: TimeInterval = 0.35
+    /// Maximum X position of a touch that counts as starting from the left edge.
+    private static let edgeDetectionWidth: CGFloat = 25
+    /// Minimum horizontal swipe distance required to trigger a pop.
+    private static let minimumSwipeDistance: CGFloat = 80
+
+    // MARK: - Derived state
+
+    private var pushStates: [NavigationState] {
+        navigationViewModel.states.filter { $0.presentationType == .push }
     }
 
-    public func makeUIViewController(context: Context) -> UINavigationController {
-        context.coordinator.setUp()
+    private var presentState: NavigationState? {
+        navigationViewModel.states.last { $0.presentationType == .present }
     }
 
-    public func updateUIViewController(_ uiViewController: UINavigationController, context: Context) {}
+    private var fullScreenState: NavigationState? {
+        navigationViewModel.states.last { $0.presentationType == .presentFullScreen }
+    }
 
-    // MARK: - Coordinator
+    // MARK: - Body
 
-    public final class Coordinator: NSObject, UINavigationControllerDelegate, UIAdaptivePresentationControllerDelegate {
+    public var body: some View {
+        ZStack {
+            // Root screen – always visible at the bottom of the stack.
+            firstRoute.view()
+                .environmentObject(navigationViewModel)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
 
-        private let firstRoute: T
-        let navigationViewModel: NavigationViewModel
-
-        private var cancellables = Set<AnyCancellable>()
-        private weak var navigationController: UINavigationController?
-        /// ID of the modal state that is currently presented, used to avoid
-        /// re-presenting or re-dismissing when nothing actually changed.
-        private var presentedModalStateID: UUID?
-
-        init(firstRoute: T, navigationViewModel: NavigationViewModel) {
-            self.firstRoute = firstRoute
-            self.navigationViewModel = navigationViewModel
+            // Pushed screens – each slides in from the trailing edge.
+            ForEach(pushStates) { state in
+                state.makeView(navigationViewModel: navigationViewModel)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .transition(.move(edge: .trailing))
+            }
         }
-
-        func setUp() -> UINavigationController {
-            let rootVC = makeHostingController(route: firstRoute)
-            let navController = UINavigationController(rootViewController: rootVC)
-            navController.delegate = self
-            self.navigationController = navController
-
-            navigationViewModel.$states
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] states in
-                    self?.sync(states: states)
+        .animation(.easeInOut(duration: Self.pushAnimationDuration), value: pushStates.count)
+        // Left-edge swipe to pop the top pushed screen, mirroring the
+        // UINavigationController interactive-pop gesture.
+        .simultaneousGesture(
+            DragGesture(minimumDistance: 20, coordinateSpace: .global)
+                .onEnded { value in
+                    guard !pushStates.isEmpty,
+                          value.startLocation.x < Self.edgeDetectionWidth,
+                          value.translation.width > Self.minimumSwipeDistance,
+                          abs(value.translation.height) < abs(value.translation.width)
+                    else { return }
+                    navigationViewModel.dismissCurrent()
                 }
-                .store(in: &cancellables)
-
-            return navController
-        }
-
-        // MARK: - Hosting-controller factory
-
-        /// Creates a `UIHostingController` whose generic parameter is the
-        /// concrete `RouteView` type, so Xcode labels it
-        /// `UIHostingController<HomeView>` rather than
-        /// `UIHostingController<AnyView>`.
-        private func makeHostingController<R: Routable>(route: R) -> UIViewController {
-            let vc = UIHostingController(rootView: route.view().environmentObject(navigationViewModel))
-            vc.navigationItem.title = route.title
-            return vc
-        }
-
-        // MARK: - State synchronisation
-
-        private func sync(states: [NavigationState]) {
-            guard let navController = navigationController else { return }
-            syncPushStack(states: states, in: navController)
-            syncModal(states: states, in: navController)
-        }
-
-        private func syncPushStack(states: [NavigationState], in navController: UINavigationController) {
-            let pushStates = states.filter { $0.presentationType == .push }
-            let currentVCs = navController.viewControllers
-            let expectedCount = 1 + pushStates.count
-            // Count-based comparison is sufficient because NavigationViewModel
-            // only ever appends or removes states from the end; it never replaces
-            // a state in the middle of the array.
-            guard currentVCs.count != expectedCount else { return }
-
-            if currentVCs.count < expectedCount {
-                // Append view controllers for push states that are not yet on the stack.
-                // dropFirst is used instead of a raw subscript so the call is safe even
-                // if currentVCs is unexpectedly empty.
-                var vcs = currentVCs
-                for state in pushStates.dropFirst(max(0, currentVCs.count - 1)) {
-                    vcs.append(state.makeViewController(navigationViewModel: navigationViewModel))
+        )
+        // Sheet modal
+        .sheet(
+            item: Binding(
+                get: { presentState },
+                set: { newValue in
+                    if newValue == nil { removePresentState() }
                 }
-                navController.setViewControllers(vcs, animated: true)
-            } else {
-                // Pop back to the expected depth.
-                navController.setViewControllers(Array(currentVCs.prefix(expectedCount)), animated: true)
-            }
+            )
+        ) { state in
+            state.makeView(navigationViewModel: navigationViewModel)
         }
-
-        private func syncModal(states: [NavigationState], in navController: UINavigationController) {
-            let modalState = states.last {
-                $0.presentationType == .present || $0.presentationType == .presentFullScreen
-            }
-
-            if let modalState = modalState {
-                guard presentedModalStateID != modalState.id else { return }
-                // Present from the navigation controller itself so that the
-                // presenting VC is always the same regardless of push depth.
-                guard navController.presentedViewController == nil else { return }
-                presentedModalStateID = modalState.id
-
-                let modalVC = modalState.makeViewController(navigationViewModel: navigationViewModel)
-                if modalState.presentationType == .presentFullScreen {
-                    modalVC.modalPresentationStyle = .fullScreen
+        // Full-screen modal
+        .fullScreenCover(
+            item: Binding(
+                get: { fullScreenState },
+                set: { newValue in
+                    if newValue == nil { removeFullScreenState() }
                 }
-                navController.present(modalVC, animated: true) { [weak modalVC, weak self] in
-                    // Set the delegate in the completion block as a safety net.
-                    modalVC?.presentationController?.delegate = self
-                }
-                // UIKit creates the presentation controller synchronously during the
-                // present(_:animated:) call, so assign the delegate immediately as well.
-                modalVC.presentationController?.delegate = self
-            } else {
-                guard presentedModalStateID != nil else { return }
-                presentedModalStateID = nil
-                navController.presentedViewController?.dismiss(animated: true)
-            }
+            )
+        ) { state in
+            state.makeView(navigationViewModel: navigationViewModel)
         }
+    }
 
-        // MARK: - UINavigationControllerDelegate
+    // MARK: - Modal dismiss helpers
 
-        /// Syncs a swipe-back (interactive pop) back into `NavigationViewModel`.
-        public func navigationController(
-            _ navigationController: UINavigationController,
-            didShow viewController: UIViewController,
-            animated: Bool
-        ) {
-            let newPushCount = navigationController.viewControllers.count - 1
-            let pushStates = navigationViewModel.states.filter { $0.presentationType == .push }
-            guard newPushCount < pushStates.count else { return }
-
-            let toKeep = Set(pushStates.prefix(newPushCount).map(\.id))
-            navigationViewModel.states = navigationViewModel.states.filter { state in
-                state.presentationType != .push || toKeep.contains(state.id)
-            }
+    private func removePresentState() {
+        if let idx = navigationViewModel.states.lastIndex(where: {
+            $0.presentationType == .present
+        }) {
+            navigationViewModel.states.remove(at: idx)
         }
+    }
 
-        // MARK: - UIAdaptivePresentationControllerDelegate
-
-        /// Syncs an interactive sheet-dismiss (swipe down) back into `NavigationViewModel`.
-        public func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
-            guard presentedModalStateID != nil else { return }
-            presentedModalStateID = nil
-            if let lastModalIndex = navigationViewModel.states.lastIndex(where: {
-                $0.presentationType == .present || $0.presentationType == .presentFullScreen
-            }) {
-                navigationViewModel.states.remove(at: lastModalIndex)
-            }
+    private func removeFullScreenState() {
+        if let idx = navigationViewModel.states.lastIndex(where: {
+            $0.presentationType == .presentFullScreen
+        }) {
+            navigationViewModel.states.remove(at: idx)
         }
     }
 }
